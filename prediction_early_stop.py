@@ -148,11 +148,16 @@ if __name__ == "__main__":
     model.eval()
     predictions = []
     true_labels = []
+    test_loss = 0.0
     with torch.no_grad():
         for batch_x, batch_y in test_loader:
             output, _, _ = model(batch_x)
             predictions.append(output.view(-1))
             true_labels.append(batch_y)
+            loss = criterion(output.view(-1),batch_y)
+            test_loss+=loss.item()
+    avg_test_loss = test_loss / len(test_loader)
+    print(f"Test Loss: {avg_test_loss:.4f}")
 
     predictions = torch.cat(predictions).numpy()
     true_labels = torch.cat(true_labels).numpy()
