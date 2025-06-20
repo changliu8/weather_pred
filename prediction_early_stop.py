@@ -84,6 +84,11 @@ if __name__ == "__main__":
 
     df_final = df.fillna(method = 'ffill')
 
+    Q1 = df_final.quantile(0.25)
+    Q3 = df_final.quantile(0.75)
+    IQR = Q3 - Q1
+    df_final = df_final[~((df_final < (Q1 - 1.5 * IQR)) | (df_final > (Q3 + 1.5 * IQR))).any(axis=1)]
+
     train_loader,val_loader,test_loader = pre_processing(df_final)
     '''
     train_x = torch.tensor(train_x, dtype=torch.float32)
